@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # TOEIC Reading Practice System — Backend Documentation
 
 Hệ thống quản lý và luyện thi **TOEIC Reading** xây dựng trên nền tảng **ASP.NET Boilerplate (ABP Framework)**, **.NET 9**, **Entity Framework Core**, và **Microsoft SQL Server**.
@@ -355,3 +356,6 @@ Khi ứng dụng khởi chạy thành công:
 * **Admin Web Portal:** `https://localhost:44311/admin/index.html`
 * **Learner Mobile Simulator:** `https://localhost:44311/learner/index.html`
 * **Swagger API Documentation:** `https://localhost:44311/swagger`
+=======
+# KiemTraGK
+>>>>>>> d7e4e138019fb03337378489317b0635d3c7d524
