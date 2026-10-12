@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Luyện Thi TOEIC Reading</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --secondary: #06b6d4;
+            --dark: #0f172a;
+            --card: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            color: #ffffff;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 960px;
+            text-align: center;
+        }
+
+        .header {
+            margin-bottom: 48px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(99, 102, 241, 0.2);
+            border: 1px solid rgba(129, 140, 248, 0.4);
+            color: #a5b4fc;
+            padding: 6px 16px;
+            border-radius: 9999px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            backdrop-filter: blur(8px);
+        }
+
+        h1 {
+            font-size: 40px;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            margin-bottom: 12px;
+            background: linear-gradient(to right, #ffffff, #c7d2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p.subtitle {
+            font-size: 18px;
+            color: #94a3b8;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .portal-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 36px 28px;
+            text-align: left;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(12px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .portal-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: transparent;
+            transition: all 0.3s;
+        }
+
+        .portal-card:hover {
+            transform: translateY(-6px);
+            background: rgba(255, 255, 255, 0.09);
+            border-color: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+        }
+
+        .portal-card.teacher:hover::before {
+            background: linear-gradient(90deg, #6366f1, #a855f7);
+        }
+
+        .portal-card.student:hover::before {
+            background: linear-gradient(90deg, #06b6d4, #10b981);
+        }
+
+        .portal-card.swagger:hover::before {
+            background: linear-gradient(90deg, #f59e0b, #ef4444);
+        }
+
+        .icon-box {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 24px;
+        }
+
+        .teacher .icon-box {
+            background: rgba(99, 102, 241, 0.2);
+            color: #818cf8;
+            border: 1px solid rgba(129, 140, 248, 0.3);
+        }
+
+        .student .icon-box {
+            background: rgba(6, 182, 212, 0.2);
+            color: #38bdf8;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+        }
+
+        .swagger .icon-box {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+            border: 1px solid rgba(251, 191, 36, 0.3);
+        }
+
+        .card-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #f8fafc;
+        }
+
+        .card-desc {
+            font-size: 14px;
+            color: #94a3b8;
+            line-height: 1.5;
+            margin-bottom: 24px;
+            flex-grow: 1;
+        }
+
+        .card-action {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #c7d2fe;
+            transition: gap 0.2s;
+        }
+
+        .portal-card:hover .card-action {
+            gap: 12px;
+            color: #ffffff;
+        }
+
+        .account-hint {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .account-hint strong {
+            color: #cbd5e1;
+        }
+
+        .footer {
+            font-size: 13px;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="badge">
+                <i class="fa-solid fa-graduation-cap"></i> ASP.NET Boilerplate TOEIC Reading Practice
+            </div>
+            <h1>Cổng Quản Trị & Luyện Thi TOEIC</h1>
+            <p class="subtitle">Chọn phân hệ bên dưới để bắt đầu sử nghiệm hệ thống quản lý đề và luyện thi trực tuyến.</p>
+        </div>
+
+        <div class="grid">
+            <!-- Admin Portal -->
+            <a href="/admin/index.html" class="portal-card teacher">
+                <div>
+                    <div class="icon-box">
+                        <i class="fa-solid fa-chalkboard-user"></i>
+                    </div>
+                    <div class="card-title">Dành Cho Giảng Viên</div>
+                    <div class="card-desc">
+                        Import đề thi từ file Word (.docx), xem trước Part 5, 6, 7, chỉnh sửa câu hỏi & đáp án, xuất bản đề thi.
+                    </div>
+                </div>
+                <div>
+                    <div class="card-action">
+                        Truy cập Admin Portal <i class="fa-solid fa-arrow-right"></i>
+                    </div>
+                    <div class="account-hint">
+                        Tài khoản: <strong>admin</strong> | Mật khẩu: <strong>123qwe</strong>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Learner Portal -->
+            <a href="/learner/index.html" class="portal-card student">
+                <div>
+                    <div class="icon-box">
+                        <i class="fa-solid fa-user-graduate"></i>
+                    </div>
+                    <div class="card-title">Dành Cho Thí Sinh</div>
+                    <div class="card-desc">
+                        Làm bài thi đọc 75 phút (Part 5, 6, 7), đếm ngược thời gian thực, bảng 100 câu hỏi, chấm điểm chuẩn ETS (5-495).
+                    </div>
+                </div>
+                <div>
+                    <div class="card-action">
+                        Truy cập Thí Sinh Làm Bài <i class="fa-solid fa-arrow-right"></i>
+                    </div>
+                    <div class="account-hint">
+                        Tài khoản: <strong>learner</strong> | Mật khẩu: <strong>123qwe</strong>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Swagger API Portal -->
+            <a href="/swagger" class="portal-card swagger">
+                <div>
+                    <div class="icon-box">
+                        <i class="fa-solid fa-code"></i>
+                    </div>
+                    <div class="card-title">REST API Swagger</div>
+                    <div class="card-desc">
+                        Tài liệu đặc tả API chuẩn RESTful cho Mobile App (iOS / Android) và kiểm thử trực tiếp các endpoint.
+                    </div>
+                </div>
+                <div>
+                    <div class="card-action">
+                        Xem tài liệu Swagger <i class="fa-solid fa-arrow-right"></i>
+                    </div>
+                    <div class="account-hint">
+                        OpenAPI 3.0 / JWT Authentication
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="footer">
+            Hệ thống Kiểm Tra Giữa Kỳ - Kiến trúc ABP Framework (.NET Core + EF Core)
+        </div>
+    </div>
+</body>
+</html>

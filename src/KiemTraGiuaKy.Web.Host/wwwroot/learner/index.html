@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Luyện Thi TOEIC Reading - Thí Sinh</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="learner.css">
+</head>
+<body>
+
+  <!-- MOBILE DEVICE VIEWPORT CONTAINER -->
+  <div class="mobile-app-container">
+
+    <!-- ── VIEW 1: DANH SÁCH ĐỀ THI ĐỂ CHỌN ── -->
+    <div id="viewExamsList" style="display: block;">
+      <header class="app-header">
+        <div class="header-left">
+          <a href="/index.html" class="btn-back" title="Quay lại Portal">
+            <i class="fa-solid fa-arrow-left"></i>
+          </a>
+          <div class="header-title-box">
+            <h1 class="header-title">Luyện Thi Reading</h1>
+            <div class="header-subtitle">
+              <i class="fa-regular fa-clock"></i>
+              <span>75 phút • Reading</span>
+            </div>
+          </div>
+        </div>
+        <button class="avatar-btn" title="Học viên">
+          <i class="fa-solid fa-user"></i>
+        </button>
+      </header>
+
+      <main class="app-content">
+        <div style="font-size: 14px; font-weight: 700; color: var(--text-dark); margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
+          <span>Đề thi có sẵn</span>
+          <span style="font-size: 12px; font-weight: 500; color: var(--text-muted);" id="availableExamsCount"></span>
+        </div>
+        <div id="examsGrid" style="display: flex; flex-direction: column; gap: 12px;">
+          <!-- Exam cards loaded via JS -->
+        </div>
+      </main>
+    </div>
+
+    <!-- ── VIEW 2: MÀN HÌNH LÀM BÀI THI (THEO MOCKUP 2) ── -->
+    <div id="viewTakingExam" style="display: none; flex-direction: column; height: 100vh;">
+      <!-- Header -->
+      <header class="app-header">
+        <div class="header-left">
+          <button id="btnExitExam" class="btn-back" title="Thoát bài thi">
+            <i class="fa-solid fa-arrow-left"></i>
+          </button>
+          <div class="header-title-box">
+            <h1 class="header-title">Luyện Thi Reading</h1>
+            <div class="header-subtitle">
+              <i class="fa-regular fa-clock"></i>
+              <span>75 phút • Reading</span>
+            </div>
+          </div>
+        </div>
+        <button class="avatar-btn" title="Học viên">
+          <i class="fa-solid fa-user"></i>
+        </button>
+      </header>
+
+      <!-- Exam Subbar: Part + Timer + Nộp bài -->
+      <div class="exam-bar">
+        <div class="exam-part-info">
+          <span class="dot-blue"></span>
+          <div>
+            <div class="exam-part-title" id="takingPartTitle">Đề số 1 • Part 5</div>
+            <div class="exam-part-sub" id="takingPartSub">Incomplete Sentences</div>
+          </div>
+        </div>
+        <div class="exam-bar-actions">
+          <div class="timer-pill">
+            <i class="fa-regular fa-clock"></i>
+            <span id="timerDisplay">75:00</span>
+          </div>
+          <button id="btnSubmitExam" class="btn-submit-exam">
+            <i class="fa-regular fa-square-check"></i>
+            <span>Nộp bài</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Part Nav Strip & Progress Line -->
+      <div class="part-nav-strip">
+        <div class="part-badge-tag" id="currentPartTag">
+          Part 5 Điền từ vào câu
+        </div>
+        <div class="question-progress-count" id="questionProgressText">
+          Câu 101/200 <span>(1%)</span>
+        </div>
+      </div>
+      <div class="progress-line-track">
+        <div class="progress-line-fill" id="progressLineFill"></div>
+      </div>
+
+      <!-- Question Card Body -->
+      <main class="app-content" id="takingExamBody">
+        <div class="question-card">
+          <div class="question-card-header">
+            <div class="badge-question-num">
+              <i class="fa-regular fa-circle-question"></i>
+              <span id="currentQuestionNumBadge">Câu hỏi 101</span>
+            </div>
+            <button id="btnBookmark" class="btn-bookmark" title="Đánh dấu câu hỏi này">
+              <i class="fa-regular fa-bookmark"></i>
+            </button>
+          </div>
+
+          <!-- Passage if Part 6 / Part 7 -->
+          <div id="passageContainer" style="display: none;" class="passage-box"></div>
+
+          <!-- Question Text -->
+          <div class="question-text-box" id="questionTextBox">
+            <!-- Dynamic text -->
+          </div>
+
+          <!-- Accordion Hint -->
+          <div class="hint-accordion" id="hintAccordion" style="margin-bottom: 4px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <i class="fa-regular fa-lightbulb"></i>
+              <span>Gợi ý cấu trúc & Từ vựng</span>
+            </div>
+            <i class="fa-solid fa-chevron-down" id="hintChevron"></i>
+          </div>
+          <div id="hintContentBox" style="display: none; padding: 10px 14px; font-size: 13px; color: #475569; background: #ffffff; border: 1px solid #c7d2fe; border-top: none; border-radius: 0 0 10px 10px; margin-bottom: 16px;">
+            Đọc kỹ 4 phương án ngữ pháp để chọn loại từ phù hợp trong câu.
+          </div>
+        </div>
+
+        <!-- Options A, B, C, D -->
+        <div class="options-list" id="optionsContainer">
+          <!-- Dynamic options -->
+        </div>
+
+        <!-- Hint to deselect -->
+        <div class="option-cancel-hint">
+          <i class="fa-regular fa-lightbulb" style="color: #6366f1;"></i>
+          <span>Chạm lần nữa vào đáp án đang chọn để hủy chọn</span>
+        </div>
+      </main>
+
+      <!-- Bottom Navigation Controls -->
+      <footer class="bottom-nav-bar">
+        <button id="btnPrevQuestion" class="btn-nav-prev" title="Câu trước">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <button id="btnOpenPalette" class="btn-open-palette">
+          <i class="fa-solid fa-table-cells-large"></i>
+          <span id="btnPaletteLabel">Câu 101/200</span>
+        </button>
+        <button id="btnNextQuestion" class="btn-nav-next">
+          <span>Câu sau</span>
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+      </footer>
+    </div>
+
+    <!-- ── VIEW 3: MÀN HÌNH CHI TIẾT KẾT QUẢ (THEO MOCKUP 3) ── -->
+    <div id="viewExamResult" style="display: none;">
+      <!-- Header -->
+      <header class="app-header">
+        <div class="header-left">
+          <button id="btnResultBackToHome" class="btn-back" title="Về trang chủ">
+            <i class="fa-solid fa-arrow-left"></i>
+          </button>
+          <div class="header-title-box">
+            <h1 class="header-title">Chi Tiết Kết Quả</h1>
+            <div class="header-subtitle">
+              <i class="fa-regular fa-clock"></i>
+              <span>75 phút • Reading</span>
+            </div>
+          </div>
+        </div>
+        <button class="avatar-btn">
+          <i class="fa-solid fa-user"></i>
+        </button>
+      </header>
+
+      <main class="app-content">
+        <!-- Top banner -->
+        <div class="result-card-banner">
+          <div class="banner-icon-badge">
+            <i class="fa-solid fa-medal"></i>
+          </div>
+          <div>
+            <div class="banner-title">Hoàn thành xuất sắc! 🎉</div>
+            <div class="banner-sub">Bạn đã hoàn tất trọn vẹn 100 câu bài thi đọc hiểu TOEIC.</div>
+          </div>
+        </div>
+
+        <!-- Score Overview Card with Donut Chart -->
+        <div class="score-overview-box">
+          <div class="score-header-row">
+            <div>
+              <div class="score-title-sub">Ước tính TOEIC Reading</div>
+              <div style="display: flex; align-items: baseline; gap: 4px;">
+                <span class="score-main-value" id="resScaledScore">385</span>
+                <span class="score-max-value">/ 495</span>
+              </div>
+            </div>
+            <div>
+              <div class="score-title-sub" style="text-align: right;">Độ chính xác</div>
+              <div class="accuracy-badge" id="resAccuracyBadge">78%</div>
+            </div>
+          </div>
+
+          <!-- Donut SVG -->
+          <div class="donut-chart-container">
+            <div class="donut-svg-wrap">
+              <svg viewBox="0 0 100 100" style="width: 100%; height: 100%; transform: rotate(-90deg);">
+                <circle cx="50" cy="50" r="40" fill="transparent" stroke="#e2e8f0" stroke-width="12" />
+                <circle id="donutGreenSegment" cx="50" cy="50" r="40" fill="transparent" stroke="#10b981" stroke-width="12" stroke-dasharray="251" stroke-dashoffset="55" stroke-linecap="round" />
+                <circle id="donutRedSegment" cx="50" cy="50" r="40" fill="transparent" stroke="#ef4444" stroke-width="12" stroke-dasharray="251" stroke-dashoffset="215" stroke-linecap="round" />
+              </svg>
+              <div class="donut-center-info">
+                <div class="donut-center-num" id="donutTotalNum">100</div>
+                <div class="donut-center-label">Câu hỏi</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Breakdown list -->
+          <div class="stats-breakdown-list">
+            <div class="stat-item-row">
+              <div class="stat-item-label">
+                <span class="dot-stat-green"></span>
+                <span>Đúng:</span>
+              </div>
+              <div class="stat-item-val" id="resCorrectDetail">78 câu (78%)</div>
+            </div>
+            <div class="stat-item-row">
+              <div class="stat-item-label">
+                <span class="dot-stat-red"></span>
+                <span>Sai:</span>
+              </div>
+              <div class="stat-item-val" id="resWrongDetail">14 câu (14%)</div>
+            </div>
+            <div class="stat-item-row">
+              <div class="stat-item-label">
+                <span class="dot-stat-gray"></span>
+                <span>Bỏ qua:</span>
+              </div>
+              <div class="stat-item-val" id="resSkippedDetail">08 câu (8%)</div>
+            </div>
+            <div class="time-spent-row">
+              <i class="fa-regular fa-clock"></i>
+              <span id="resTimeSpent">Thời gian: 64p 18s / 75p</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3 Quick Cards -->
+        <div class="quick-stats-grid">
+          <div class="quick-card green">
+            <div class="quick-card-icon"><i class="fa-solid fa-check"></i></div>
+            <div class="quick-card-val" id="quickCorrectVal">78</div>
+            <div class="quick-card-label">Câu đúng</div>
+          </div>
+          <div class="quick-card red">
+            <div class="quick-card-icon"><i class="fa-solid fa-xmark"></i></div>
+            <div class="quick-card-val" id="quickWrongVal">14</div>
+            <div class="quick-card-label">Câu sai</div>
+          </div>
+          <div class="quick-card gray">
+            <div class="quick-card-icon"><i class="fa-solid fa-minus"></i></div>
+            <div class="quick-card-val" id="quickSkippedVal">08</div>
+            <div class="quick-card-label">Bỏ qua</div>
+          </div>
+        </div>
+
+        <!-- Phân tích từng phần thi (Part 5, 6, 7) -->
+        <div class="part-analysis-box">
+          <div class="analysis-header">
+            <div class="analysis-title">Phân tích từng phần thi</div>
+            <span class="analysis-link">Reading Mastery <i class="fa-solid fa-arrow-trend-up"></i></span>
+          </div>
+
+          <!-- Part 5 -->
+          <div class="part-prog-item">
+            <div class="part-prog-header">
+              <div>
+                <span class="part-num-badge">5</span>
+                <span>Part 5: Incomplete Sentences</span>
+              </div>
+              <span id="p5ScoreText" style="color: #10b981;">26/30 (87%)</span>
+            </div>
+            <div class="part-prog-bar">
+              <div class="part-prog-fill fill-p5" id="p5ProgFill" style="width: 87%;"></div>
+            </div>
+          </div>
+
+          <!-- Part 6 -->
+          <div class="part-prog-item">
+            <div class="part-prog-header">
+              <div>
+                <span class="part-num-badge">6</span>
+                <span>Part 6: Text Completion</span>
+              </div>
+              <span id="p6ScoreText" style="color: #2563eb;">12/16 (75%)</span>
+            </div>
+            <div class="part-prog-bar">
+              <div class="part-prog-fill fill-p6" id="p6ProgFill" style="width: 75%;"></div>
+            </div>
+          </div>
+
+          <!-- Part 7 -->
+          <div class="part-prog-item">
+            <div class="part-prog-header">
+              <div>
+                <span class="part-num-badge">7</span>
+                <span>Part 7: Reading Comprehension</span>
+              </div>
+              <span id="p7ScoreText" style="color: #0d9488;">40/54 (74%)</span>
+            </div>
+            <div class="part-prog-bar">
+              <div class="part-prog-fill fill-p7" id="p7ProgFill" style="width: 74%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lời khuyên cải thiện kỹ năng -->
+        <div class="advice-box">
+          <div class="advice-icon">
+            <i class="fa-regular fa-lightbulb"></i>
+          </div>
+          <div class="advice-content">
+            <div class="advice-title">Lời khuyên cải thiện kỹ năng</div>
+            <div id="adviceText">
+              Bạn cần tối ưu tốc độ đọc ở các bài đọc kép <strong>Part 7</strong> để cải thiện thêm <strong>40 - 60 điểm</strong> trong kỳ thi chính thức.
+            </div>
+          </div>
+        </div>
+
+        <!-- Action buttons -->
+        <button id="btnReviewAttemptAnswers" class="btn-primary-action">
+          <i class="fa-solid fa-book-open"></i>
+          <span>Xem lại bài làm chi tiết</span>
+        </button>
+
+        <button id="btnBackToExamsList" class="btn-secondary-action">
+          <i class="fa-solid fa-house"></i>
+          <span>Về trang chủ đề thi</span>
+        </button>
+      </main>
+    </div>
+
+  </div>
+
+  <!-- ── MODAL: 100-QUESTION PALETTE ── -->
+  <div id="paletteModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; align-items: flex-end; justify-content: center;">
+    <div style="background: white; border-radius: 20px 20px 0 0; width: 100%; max-width: 480px; padding: 20px; max-height: 80vh; display: flex; flex-direction: column;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <div style="font-weight: 800; font-size: 16px; color: var(--text-dark);">Danh sách 100 câu hỏi</div>
+        <button id="btnClosePalette" style="background: none; border: none; font-size: 18px; color: var(--text-muted); cursor: pointer;">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div id="paletteGrid" class="palette-grid">
+        <!-- Palette buttons 1 to 100 -->
+      </div>
+    </div>
+  </div>
+
+  <script src="learner.js"></script>
+</body>
+</html>

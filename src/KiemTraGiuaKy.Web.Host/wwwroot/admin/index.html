@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TOEIC Admin - Quản lý đề thi TOEIC Reading</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="brand-title">
+        <div class="brand-icon">
+          <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+        <span>TOEIC Admin</span>
+      </div>
+      <span class="badge-version">v2.4</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="#" class="nav-item">
+        <i class="fa-solid fa-table-cells-large"></i>
+        <span>Tổng quan</span>
+      </a>
+      <a href="#" class="nav-item active">
+        <i class="fa-regular fa-file-lines"></i>
+        <span>Quản lý đề thi</span>
+      </a>
+      <a href="javascript:void(0)" id="btnSidebarImport" class="nav-item">
+        <i class="fa-solid fa-cloud-arrow-up"></i>
+        <span>Import đề thi</span>
+      </a>
+      <a href="javascript:void(0)" id="btnSidebarPreview" class="nav-item">
+        <i class="fa-solid fa-pen-to-square"></i>
+        <span>Biên tập & Preview</span>
+      </a>
+      <a href="#" class="nav-item">
+        <i class="fa-solid fa-users"></i>
+        <span>Tài khoản</span>
+      </a>
+      <a href="/learner/index.html" class="nav-item" style="margin-top: auto; color: #2563eb; background: #eff6ff;">
+        <i class="fa-solid fa-mobile-screen"></i>
+        <span>Chế độ Học Viên</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <span>Hệ thống chấm thi v2.4</span>
+      <i class="fa-solid fa-shield-halved" style="color: #10b981;"></i>
+    </div>
+  </aside>
+
+  <!-- ── MAIN CONTENT ── -->
+  <div class="main-wrapper">
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <div class="portal-tag">
+          <i class="fa-solid fa-cubes" style="color: #2563eb;"></i>
+          <span>TOEIC Portal</span>
+        </div>
+        <i class="fa-solid fa-chevron-right" style="font-size: 10px; color: #94a3b8;"></i>
+        <span>Reading Admin</span>
+      </div>
+
+      <div class="topbar-right">
+        <button class="btn-icon-notif" title="Thông báo">
+          <i class="fa-regular fa-bell"></i>
+          <span class="notif-dot"></span>
+        </button>
+
+        <div class="user-profile">
+          <div class="user-info">
+            <div class="user-name">Nguyễn Thảo My</div>
+            <div class="user-role">Giảng viên Tiếng Anh</div>
+          </div>
+          <div class="user-avatar">
+            <i class="fa-solid fa-user"></i>
+          </div>
+        </div>
+
+        <a href="/index.html" class="btn-logout" title="Đăng xuất">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+          <span>Đăng xuất</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- CONTENT BODY -->
+    <main class="content-container">
+      <!-- Breadcrumb & Title -->
+      <div class="breadcrumb">
+        <span>Trang chủ</span>
+        <i class="fa-solid fa-chevron-right" style="font-size: 9px;"></i>
+        <span class="current">Quản lý đề thi</span>
+      </div>
+
+      <div class="header-row">
+        <div>
+          <h1 class="page-title">Danh sách đề thi TOEIC Reading</h1>
+          <p class="page-desc">Quản lý, xuất bản và cập nhật ngân hàng bộ đề thi chuẩn ETS & Economy cho học viên.</p>
+        </div>
+        <div class="status-pills">
+          <div class="pill-item">
+            <span class="dot-green"></span>
+            <span>Đã xuất bản: <strong id="statPublishedBadge">0</strong></span>
+          </div>
+          <div class="pill-item">
+            <span class="dot-gray"></span>
+            <span>Bản nháp: <strong id="statDraftBadge">0</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filters & Action Bar -->
+      <div class="filter-bar">
+        <div class="search-box">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="searchInput" placeholder="Tìm theo tên đề thi, mã đề...">
+          <span class="search-shortcut">Ctrl + K</span>
+        </div>
+
+        <select id="filterStatus" class="filter-select">
+          <option value="all">Trạng thái: Tất cả</option>
+          <option value="published">Đã xuất bản</option>
+          <option value="draft">Bản nháp</option>
+        </select>
+
+        <select id="filterSource" class="filter-select">
+          <option value="all">Giáo trình: Tất cả</option>
+          <option value="ets">ETS 2024</option>
+          <option value="economy">Economy RC</option>
+          <option value="hacker">Hacker TOEIC</option>
+        </select>
+
+        <button id="btnRefresh" class="btn-secondary">
+          <i class="fa-solid fa-rotate"></i>
+          <span>Làm mới</span>
+        </button>
+
+        <button id="btnOpenImport" class="btn-primary-import">
+          <i class="fa-solid fa-plus"></i>
+          <span>Import đề thi từ Word</span>
+        </button>
+      </div>
+
+      <!-- Table Card -->
+      <div class="table-card">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 60px;">STT</th>
+              <th>Tên đề thi</th>
+              <th style="width: 130px;">Thời gian</th>
+              <th style="width: 120px;">Số câu hỏi</th>
+              <th style="width: 140px;">Trạng thái</th>
+              <th style="width: 180px;">Ngày tạo & Người tạo</th>
+              <th style="width: 140px; text-align: right;">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody id="examTableBody">
+            <tr>
+              <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 3rem;">
+                Đang tải dữ liệu đề thi...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Table Footer -->
+        <div class="table-footer">
+          <div id="paginationSummary">Hiển thị danh sách đề thi</div>
+          <div class="pagination-btns">
+            <button class="page-btn"><i class="fa-solid fa-chevron-left"></i> Trước</button>
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn">Sau <i class="fa-solid fa-chevron-right"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Widgets (Tiến độ, Mẹo, Lọc) -->
+      <div class="bottom-cards">
+        <!-- Widget 1: Tiến độ xuất bản -->
+        <div class="stat-widget">
+          <div class="widget-title">
+            <span>Tiến độ xuất bản kỳ thi</span>
+            <i class="fa-solid fa-rotate-right" style="color: #2563eb; cursor: pointer;"></i>
+          </div>
+          <div class="progress-circle-wrap">
+            <svg class="circle-progress-svg" viewBox="0 0 80 80">
+              <circle class="circle-bg" cx="40" cy="40" r="35" />
+              <circle class="circle-fill" id="circleProgressFill" cx="40" cy="40" r="35" />
+            </svg>
+            <div>
+              <div class="progress-text-val" id="progressPercentage">0%</div>
+              <div class="progress-text-sub" id="progressTextSub">0 bộ đề sẵn sàng khảo thí</div>
+            </div>
+          </div>
+          <div class="widget-footer-text">
+            Đợt rà soát tiếp theo: 20/10/2026
+          </div>
+        </div>
+
+        <!-- Widget 2: Mẹo biên tập nhanh -->
+        <div class="stat-widget">
+          <div>
+            <div class="tip-title">
+              <i class="fa-regular fa-lightbulb" style="color: #2563eb;"></i>
+              <span>Mẹo biên tập nhanh</span>
+            </div>
+            <p class="tip-desc">
+              Bạn có thể sử dụng mẫu định dạng chuẩn <strong>.docx</strong> hỗ trợ tag <code>[Part 5]</code>, <code>[Part 6]</code>, <code>[Part 7]</code> để tự động nhận dạng bảng passage khi import.
+            </p>
+          </div>
+          <a href="#" class="tip-link">
+            <span>Tải tệp mẫu TOEIC_Template.docx</span>
+            <i class="fa-solid fa-download"></i>
+          </a>
+        </div>
+
+        <!-- Widget 3: Bộ lọc không khớp -->
+        <div class="stat-widget">
+          <div class="empty-filter-box">
+            <div class="empty-icon">
+              <i class="fa-solid fa-filter-circle-xmark"></i>
+            </div>
+            <div class="empty-title">Bộ lọc không khớp?</div>
+            <div class="empty-desc">Khi danh mục rỗng, hệ thống sẽ đề xuất tạo mới đề thi nhanh chóng qua AI Parser.</div>
+            <button id="btnResetFilter" class="btn-reset-filter">Đặt lại bộ lọc</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ── MODAL: IMPORT ĐỀ THI TỪ WORD ── -->
+  <div id="importModal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">
+          <i class="fa-solid fa-cloud-arrow-up" style="color: #2563eb; margin-right: 8px;"></i>
+          Import Đề Thi Từ Word (.docx)
+        </div>
+        <button class="modal-close btnCloseModal"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <div id="dropzone" class="dropzone-stitch">
+          <div class="dropzone-icon">
+            <i class="fa-regular fa-file-word"></i>
+          </div>
+          <h3 style="font-size: 15px; font-weight: 600; margin-bottom: 6px;">Kéo & Thả tệp .docx vào đây</h3>
+          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">hoặc bấm để duyệt tệp từ máy tính</p>
+          <span style="font-size: 11px; color: var(--text-muted); background: #f1f5f9; padding: 4px 10px; border-radius: 999px;">
+            Định dạng hợp lệ: Word (.docx)
+          </span>
+          <input type="file" id="fileInput" accept=".docx" style="display: none;">
+        </div>
+
+        <div id="uploadFileInfo" style="display: none; margin-top: 14px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 12px 16px;">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <i class="fa-regular fa-file-word" style="color: #2563eb;"></i>
+              <span id="fileNameDisplay" style="font-weight: 600; font-size: 13px; color: #1e3a8a;"></span>
+            </div>
+            <span style="font-size: 11px; color: #2563eb; font-weight: 600;">Sẵn sàng tải lên</span>
+          </div>
+        </div>
+
+        <div id="importErrorBox" style="display: none; margin-top: 14px; background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 14px;">
+          <div style="font-weight: 700; color: #991b1b; font-size: 13px; margin-bottom: 6px;">
+            <i class="fa-solid fa-circle-exclamation"></i> Lỗi định dạng đề thi (Không tạo đề thi):
+          </div>
+          <ul id="importErrorList" style="margin-left: 20px; font-size: 12px; color: #b91c1c; line-height: 1.5;"></ul>
+        </div>
+
+        <div id="importSuccessBox" style="display: none; margin-top: 14px; background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 8px; padding: 14px;">
+          <div style="font-weight: 700; color: #065f46; font-size: 13px; margin-bottom: 4px;">
+            <i class="fa-solid fa-circle-check"></i> Import thành công!
+          </div>
+          <div id="importSuccessDetails" style="font-size: 12px; color: #047857;"></div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px;">
+          <button class="btn-secondary btnCloseModal" type="button">Hủy bỏ</button>
+          <button id="btnSubmitUpload" class="btn-primary-import" disabled type="button">
+            <i class="fa-solid fa-upload"></i> Bắt đầu Import
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MODAL: PREVIEW & BIÊN TẬP ĐỀ THI ── -->
+  <div id="previewModal" class="modal-overlay">
+    <div class="modal-card large">
+      <div class="modal-header">
+        <div>
+          <div class="modal-title" id="previewModalTitle">Xem trước đề thi</div>
+          <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;" id="previewModalSub">100 câu hỏi TOEIC Reading</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <button id="btnEditFromPreview" class="btn-primary-import" style="padding:6px 14px; font-size:12px; height:auto;">
+            <i class="fa-regular fa-pen-to-square"></i> Chỉnh sửa đề thi
+          </button>
+          <button class="modal-close btnCloseModal"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+      </div>
+      <div class="modal-body" id="previewModalBody" style="background: #f8fafc;">
+        <!-- Dynamic content will be injected by app.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MODAL: CHỈNH SỬA THÔNG TIN ĐỀ THI ── -->
+  <div id="editModal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">
+          <i class="fa-regular fa-pen-to-square" style="color: #2563eb; margin-right: 8px;"></i>
+          Chỉnh Sửa Thông Tin Đề Thi
+        </div>
+        <button class="modal-close btnCloseModal"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="editExamId" value="">
+        <div style="margin-bottom: 16px;">
+          <label style="display:block; font-size:13px; font-weight:600; color:var(--text-dark); margin-bottom:6px;">
+            Tiêu đề đề thi <span style="color:#ef4444;">*</span>
+          </label>
+          <input type="text" id="editExamTitle" class="search-input" style="width:100%; border:1px solid var(--border-color); border-radius:8px; padding:10px 14px; font-size:14px;" placeholder="Ví dụ: TOEIC Reading - Đề số 5">
+        </div>
+
+        <div style="margin-bottom: 16px;">
+          <label style="display:block; font-size:13px; font-weight:600; color:var(--text-dark); margin-bottom:6px;">
+            Thời lượng làm bài (phút) <span style="color:#ef4444;">*</span>
+          </label>
+          <input type="number" id="editExamDuration" class="search-input" style="width:100%; border:1px solid var(--border-color); border-radius:8px; padding:10px 14px; font-size:14px;" min="5" max="300" placeholder="75">
+        </div>
+
+        <div style="margin-bottom: 20px;">
+          <label style="display:block; font-size:13px; font-weight:600; color:var(--text-dark); margin-bottom:6px;">
+            Mô tả / Ghi chú đề thi
+          </label>
+          <textarea id="editExamDesc" class="search-input" style="width:100%; height:90px; border:1px solid var(--border-color); border-radius:8px; padding:10px 14px; font-size:14px; resize:vertical;" placeholder="Chuẩn format ETS Reading..."></textarea>
+        </div>
+
+        <div id="editErrorBox" style="display:none; margin-bottom:16px; background:#fef2f2; border:1px solid #fecaca; color:#dc2626; border-radius:8px; padding:10px 14px; font-size:13px;"></div>
+
+        <div style="display:flex; justify-content:flex-end; gap:10px;">
+          <button class="btn-secondary btnCloseModal" type="button">Hủy bỏ</button>
+          <button id="btnSaveEditExam" class="btn-primary-import" type="button">
+            <i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
